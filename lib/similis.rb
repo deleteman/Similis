@@ -1,9 +1,14 @@
-require './lib/processors/soundex_processor'
-require './lib/processors/levenshtein_processor'
+require 'similis/soundex_processor'
+require 'similis/levenshtein_processor'
 
 module Similis
   @@lists = Hash.new
+  @@last_method_used = nil
+  VERSION = "0.1"
 
+  def self.last_method_used 
+    @@last_method_used
+  end
   
   #Holds the list of words to be processed by algorithms like soundex
   class ToBeProcessedList
@@ -36,13 +41,16 @@ module Similis
   end
 
   def self.metaphone
+    #TODO: Implement
   end
 
   def self.soundex string
+    @@last_method_used = :soundex
     SoundexProcessor.calculate string
   end
 
   def self.needleman_wunsch
+    #TODO: Implement
   end
 
   #Usage: Similis.preprocess({:key => list_of_words}).with(:algorithm)
@@ -55,6 +63,7 @@ module Similis
 
   #Calculates the Levenstein distance between two words
   def self.levenshtein(word, other, ins=2, del=1, sub=1)
+    @@last_method_used = :levenshtein
     LevenshteinProcessor.calculate(word, other, ins, del, sub)
   end
 
@@ -66,8 +75,11 @@ module Similis
     best_distance = 999999
 
     list.each do |w|
-      w["\n"] = ""
-      w["\r"] = ""
+      begin 
+        w.gsub!(/\n/,"")
+        w.gsub!(/\r/, "")
+      rescue 
+      end
       distance = levenshtein(word, w)
       if(distance <= best_distance)
         chosen_words[distance] = Array.new if chosen_words[distance].nil?
@@ -76,13 +88,14 @@ module Similis
       end
     end
     #lets return the word if there is only one, or the list of words if there are more
-    if chosen_words[best_distance].count == 1
+    if !chosen_words[best_distance].nil? and chosen_words[best_distance].count == 1
       chosen_words[best_distance][0]
     else
       chosen_words[best_distance]
     end
   end
 
+  #Finds the most similar words using a preprocessed list 
   def self.find_using_soundex word, list
     chosen_words = Hash.new
     soundex_key = soundex word
@@ -92,7 +105,7 @@ module Similis
         chosen_words[soundex_key] << item[:word]
       end
     end
-    if chosen_words[soundex_key].count == 1
+    if !chosen_words[soundex_key].nil? and chosen_words[soundex_key].count == 1
       chosen_words[soundex_key][0]
     else 
       chosen_words[soundex_key]

@@ -20,7 +20,7 @@ Here are some examples:
 The following algorithms are supported or will be supported on future versions of the gem:
 
 + Levenshtein distance. **Already in**
-+ Soundex ** Already in**
++ Soundex **Already in**
 + Metaphone **Not supported yet**
 + Needleman-Wunsch  **Not supported yet**
 + Jaro-Winkler distance  **Not supported yet**
@@ -40,6 +40,7 @@ Finding the most similar word (or words) to a given one is pretty simple, all yo
 That code will return the most similar word, or a list of them (if they have the same Levenshtein distance).
 
 **Use a specific method**
+
 You can also preprocess your list, if the algorithm allows it to, in order to find quickly search through the list in the future.
 
 Here is how:
