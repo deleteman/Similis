@@ -57,7 +57,11 @@ Please note that you can't do this with the _Levenshtein distance_ algorithm, si
 
 #Installing the gem
 
-Right now, there is no gem binary, but once I have a tested version of the code, I'll get it up on rubygems.org.
+The gem is up on Rubygems.org so in order to install it, just run:
+
+```
+gem install similis
+```
 
 #Questions? Suggestions?
 
